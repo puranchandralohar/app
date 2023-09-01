@@ -20,7 +20,7 @@ const Dashboard = () => {
           const secondApiResponse = await fetch(`https://merd-api.merakilearn.org/user/talk_mitra/${userId}`);
           if (secondApiResponse.ok) {
             const secondUserData = await secondApiResponse.json();
-            setUserDetails(secondUserData);
+            setUserDetails(secondUserData[0]);
           } else {
             // Handle the case when both APIs fail
             console.error('Error fetching user details:', secondApiResponse.status);
