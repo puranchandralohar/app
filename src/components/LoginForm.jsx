@@ -18,10 +18,43 @@ const LoginForm = () => {
     }));
   };
 
-  const handleLogin = async (event) => {
+  // const handleLogin = async (event) => {
 
-    console.log(formData)
-    event.preventDefault();
+  //   console.log(formData)
+  //   event.preventDefault();
+  //   try {
+  //     const response = await fetch('https://merd-api.merakilearn.org/user/talk_mitra/login', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         user_id: formData.user_id,
+  //         password: formData.password,
+  //       }),
+  //     });
+
+  //     if (response.ok) {
+  //       console.log('user logged in successfully');
+  //       navigate(`/dashboard/${formData.user_id}`);
+  //     } else {
+  //       try {
+  //         const errorData = await response.json();
+  //         console.log('error: ' + errorData.error);
+  //       } catch (jsonError) {
+  //         const errorText = await response.text();
+  //         console.log('error: ' + errorText);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Error logging in:', error);
+  //     console.log('An error occurred during login.');
+  //   }
+  // };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     try {
       const response = await fetch('https://merd-api.merakilearn.org/user/login', {
         method: 'POST',
@@ -35,15 +68,37 @@ const LoginForm = () => {
       });
 
       if (response.ok) {
-        console.log('user logged in successfully');
-        navigate(`/dashboard`);
+        console.log('User logged in successfully');
+        navigate(`/dashboard/${formData.user_id}`);
       } else {
         try {
           const errorData = await response.json();
-          console.log('error: ' + errorData.error);
+          console.log('Error: ' + errorData.error);
+
+          // Check the second API if the details don't match in the first API
+          const secondApiResponse = await fetch('https://merd-api.merakilearn.org/user/talk_mitra/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_id: formData.user_id,
+              password: formData.password,
+            }),
+          });
+
+          if (secondApiResponse.ok) {
+            console.log('User logged in successfully with the second API');
+            navigate(`/dashboard/${formData.user_id}`);
+            // Handle successful login with the second API here
+          } else {
+            // Handle error from the second API here
+            console.error('Error logging in with the second API:', secondApiResponse.status);
+            console.log('Error: ' + errorData.error + ' (Second API: ' + secondApiResponse.status + ')');
+          }
         } catch (jsonError) {
-          const errorText = await response.text();
-          console.log('error: ' + errorText);
+          console.error('JSON error:', jsonError);
+          console.log('An error occurred during login.');
         }
       }
     } catch (error) {
@@ -51,7 +106,9 @@ const LoginForm = () => {
       console.log('An error occurred during login.');
     }
   };
-
+  
+  
+  
   return (
     <div className="login-form">
       <div className="login-header">

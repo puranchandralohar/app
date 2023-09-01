@@ -6,7 +6,7 @@ const SignupForm = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    gender: '',
+    gender: 'Male',
     country: '',
     password: '',
   });
@@ -31,7 +31,7 @@ const SignupForm = () => {
 
     event.preventDefault();
     try {
-      const response = await fetch('https://merd-api.merakilearn.org/user/signup', {
+      const response = await fetch('https://merd-api.merakilearn.org/user/talk_mitra/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
